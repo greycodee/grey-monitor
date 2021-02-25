@@ -38,7 +38,7 @@ option = {
 
 option && myChart.setOption(option);
 const host = window.location.host
-const ws = new WebSocket("ws://"+host+"/ws")
+const ws = new WebSocket("ws://"+host+"/ws/mem")
 ws.onmessage = function (evt) {
     const received_msg = evt.data;
     const json = JSON.parse(received_msg);
@@ -47,8 +47,9 @@ ws.onmessage = function (evt) {
         series: [
             {
                 data: [
-                    {value:json.used,name: '已使用内存'},
-                    {value:json.free,name: '剩余内存'},
+                    {value:Math.ceil(json.used/1000000),name: '已使用内存(M)'},
+                    {value:Math.ceil(json.free/1000000),name: '剩余内存(M)'},
+                    {value:Math.ceil(json.cached/1000000),name: '缓存(M)'},
                 ]
             }
         ]

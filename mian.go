@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"grey-monitor/ws"
+	"html/template"
 	"net/http"
 	"strings"
 )
@@ -50,7 +51,8 @@ func (s *handRequest) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 }
 
 func index(w http.ResponseWriter, r *http.Request,e string)  {
-	fmt.Fprint(w,"hello world")
+	t,_:=template.ParseFiles("views/mem.html")
+	t.Execute(w,"")
 }
 
 
@@ -58,4 +60,5 @@ var httpApi = map[string]func(w http.ResponseWriter, r *http.Request,e string){
 	"/"				:		index,
 	"/ws/mem"		:		ws.Client,
 	"/ws/cpu"		:		ws.Client,
+	"/ws/ps"		:		ws.Client,
 }
