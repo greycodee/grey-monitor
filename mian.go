@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"grey-monitor/api"
 	"grey-monitor/ws"
 	"html/template"
 	"net/http"
@@ -41,6 +42,7 @@ func (s *handRequest) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 		if stringSlice!=nil && strings.Compare(stringSlice[1],"ws")==0{
 			api(w,r,stringSlice[2])
 		}else {
+
 			api(w,r,"")
 		}
 
@@ -51,7 +53,7 @@ func (s *handRequest) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 }
 
 func index(w http.ResponseWriter, r *http.Request,e string)  {
-	t,_:=template.ParseFiles("views/mem.html")
+	t,_:=template.ParseFiles("views/index.html")
 	t.Execute(w,"")
 }
 
@@ -61,4 +63,6 @@ var httpApi = map[string]func(w http.ResponseWriter, r *http.Request,e string){
 	"/ws/mem"		:		ws.Client,
 	"/ws/cpu"		:		ws.Client,
 	"/ws/ps"		:		ws.Client,
+	"/api/disk"		:		api.DiskInfo,
+	"/api/diskPath" :		api.DiskInfoOfPath,
 }
