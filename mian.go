@@ -64,5 +64,6 @@ var httpApi = map[string]func(w http.ResponseWriter, r *http.Request,e string){
 	"/ws/cpu"		:		ws.Client,
 	"/ws/ps"		:		ws.Client,
 	"/api/disk"		:		api.DiskInfo,
+	"/api/diskPart"	:		api.DiskPart,
 	"/api/diskPath" :		api.DiskInfoOfPath,
 }

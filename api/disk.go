@@ -25,6 +25,12 @@ func DiskInfo(w http.ResponseWriter, r *http.Request,e string)  {
 	_, _ = fmt.Fprint(w, string(j))
 }
 
+func DiskPart(w http.ResponseWriter, r *http.Request,e string)  {
+	allDiskInfo,_:=disk.Partitions(true)
+	j,_:=json.Marshal(allDiskInfo)
+	_, _ = fmt.Fprint(w, string(j))
+}
+
 func DiskInfoOfPath(w http.ResponseWriter, r *http.Request,e string)  {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
