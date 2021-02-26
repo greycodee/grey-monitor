@@ -61,9 +61,11 @@ func index(w http.ResponseWriter, r *http.Request,e string)  {
 var httpApi = map[string]func(w http.ResponseWriter, r *http.Request,e string){
 	"/"				:		index,
 	"/ws/mem"		:		ws.Client,
-	"/ws/cpu"		:		ws.Client,
-	"/ws/ps"		:		ws.Client,
+	"/ws/cpuPercentSingle"	:		ws.Client,
+	"/ws/cpuPercentAll"		:		ws.Client,
+	"/api/cpuInfo"	:		api.CpuInfo,
 	"/api/disk"		:		api.DiskInfo,
 	"/api/diskPart"	:		api.DiskPart,
 	"/api/diskPath" :		api.DiskInfoOfPath,
+
 }
