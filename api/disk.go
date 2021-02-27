@@ -38,6 +38,7 @@ func DiskInfoOfPath(w http.ResponseWriter, r *http.Request,e string)  {
 		return
 	}
 	var p PathParam
+	fmt.Printf("请求参数：%s",body)
 	err =json.Unmarshal(body,&p)
 	if err != nil {
 		fmt.Printf("Unmarshal body err, %v\n", err)
@@ -46,5 +47,7 @@ func DiskInfoOfPath(w http.ResponseWriter, r *http.Request,e string)  {
 
 	u,_:=disk.Usage(p.Path)
 	j,_:=json.Marshal(u)
-	_, _ = fmt.Fprint(w, string(j))
+	header:=w.Header()
+	header.Set("Content-Type","application/json")
+	_, _ = w.Write(j)
 }
