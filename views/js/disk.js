@@ -48,13 +48,16 @@ diskChart.setOption(diskOption);
 const diskUseUrl = "http://"+host+"/api/diskPath";
 http.open("POST", diskUseUrl);
 http.setRequestHeader('Content-Type', 'application/json');
-var diskPath = {path:'/'}
+var diskPath = {path:'/home'}
 http.onreadystatechange=(e)=>{
     let j=http.response
     let json = JSON.parse(j)
     console.log(http.response)
     console.log(json.total)
     diskChart.setOption({
+        title: {
+            subtext: '磁盘: '+json.path
+        },
         series:[{
             data:[
                 {value: json.inodesUsed, name: '已使用'},
