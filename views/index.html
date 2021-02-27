@@ -4,11 +4,20 @@
     <meta charset="utf-8">
     <title>charts测试</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.0.1/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/zh/asset/theme/vintage.js"></script>
+    <script type="text/javascript">
+        const host = window.location.host;
+        const http = new XMLHttpRequest();
+    </script>
 </head>
 <body>
-    <div id="main" style="width:600px; height:400px;"></div>
-    <div id="disk" style="width:600px; height:400px;"></div>
-    <script src="js/mem.js" ></script>
+    <div style="overflow: hidden; margin: 0 auto; width: 1200px;">
+        <div id="cpuPercent" style="width: 600px;height:600px;float:left; "></div>
+        <div id="memPercent" style="width: 600px;height:600px; float:left; "></div>
+    </div>
+
+    <script src="js/memPercent.js" ></script>
+    <script src="js/cpuPercent.js" ></script>
     <script src="js/disk.js" ></script>
 </body>
 </html>
