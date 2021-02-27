@@ -35,6 +35,7 @@ func sleep()  {
 var wsEvent = map[string] func(c *websocket.Conn,err error){
 	"cpu"		:		CpuInfo,
 	"mem"		:		MemInfo,
+	"memPercent":		MemPercent,
 	"cpuPercentSingle": 	CpuPercentSingle,
 	"cpuPercentAll"	  : 	CpuPercentAll,
 }
