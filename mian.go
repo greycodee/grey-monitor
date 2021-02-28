@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	assetfs "github.com/elazarl/go-bindata-assetfs"
 	"grey-monitor/api"
@@ -14,18 +15,13 @@ import (
 type handRequest struct {
 
 }
-
+var port = flag.String("p", "8989", "http端口")
 func main() {
 	//获取命令行参数
-	port:=os.Args[1]
-	fmt.Printf(port)
-	if port==""{
-		// 默认端口
-		port=":8989"
-	}else {
-		port=":"+port
-	}
-	serverStart(port)
+	flag.Parse()
+	p:=":"+*port
+	fmt.Printf(p)
+	serverStart(p)
 }
 
 func serverStart(addr string)  {
