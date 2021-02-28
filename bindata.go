@@ -1,12 +1,10 @@
 package main
 
 import (
-	"github.com/elazarl/go-bindata-assetfs"
 	"bytes"
 	"compress/gzip"
 	"fmt"
 	"io"
-	"os"
 	"strings"
 )
 
@@ -143,13 +141,3 @@ var _bintree = &_bintree_t{nil, map[string]*_bintree_t{
 		}},
 	}},
 }}
-
-func assetFS() *assetfs.AssetFS {
-	assetInfo := func(path string) (os.FileInfo, error) {
-		return os.Stat(path)
-	}
-	for k := range _bintree.Children {
-		return &assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir, AssetInfo: assetInfo, Prefix: k}
-	}
-	panic("unreachable")
-}

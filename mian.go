@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	assetfs "github.com/elazarl/go-bindata-assetfs"
 	"grey-monitor/api"
 	"grey-monitor/ws"
 	"html/template"
@@ -35,14 +36,34 @@ func serverStart(addr string)  {
 	//将/js/路径下的请求匹配到 ./views/js/下
 	http.Handle("/js/", staticHandle)
 
+	fmt.Println("http服务器端口："+addr)
 	// 开启http服务
-	_=http.ListenAndServe(addr,nil)
+	e:=http.ListenAndServe(addr,nil)
+	if e!=nil {
+		fmt.Println(e)
+	}
+}
+
+/*
+	go-bindata-assetfs静态文件路由
+*/
+func assetFS() *assetfs.AssetFS {
+	assetInfo := func(path string) (os.FileInfo, error) {
+		return os.Stat(path)
+	}
+	for k := range _bintree.Children {
+		return &assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir, AssetInfo: assetInfo, Prefix: k}
+	}
+	panic("unreachable")
 }
 
 func distribute()  http.Handler{
 	return &handRequest{}
 }
 
+/*
+	http路由
+*/
 func (s *handRequest) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 	upath := r.URL.Path
 	hApi:=httpApi[upath]
@@ -60,7 +81,9 @@ func (s *handRequest) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 	}
 	fmt.Println(upath)
 }
-
+/*
+	主页
+*/
 func index(w http.ResponseWriter, r *http.Request,e string)  {
 	indexPage, _ :=Asset("views/index.html")
 	t,_:=template.New("index").Parse(string(indexPage))
