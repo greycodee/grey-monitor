@@ -6,6 +6,7 @@ import (
 	"grey-monitor/ws"
 	"html/template"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -14,36 +15,44 @@ type handRequest struct {
 }
 
 func main() {
-	serverStart(":8988")
+	//获取命令行参数
+	port:=os.Args[1]
+	fmt.Printf(port)
+	if port==""{
+		// 默认端口
+		port=":8989"
+	}else {
+		port=":"+port
+	}
+	serverStart(port)
 }
 
 func serverStart(addr string)  {
 	// 接口路由处理
 	http.Handle("/",distribute())
 
-	// 静态文件路由处理
-	//指定相对路径./static 为文件服务路径
-	staticHandle := http.FileServer(http.Dir("./views"))
+	staticHandle := http.FileServer(assetFS())
 	//将/js/路径下的请求匹配到 ./views/js/下
 	http.Handle("/js/", staticHandle)
 
 	// 开启http服务
 	_=http.ListenAndServe(addr,nil)
 }
+
 func distribute()  http.Handler{
 	return &handRequest{}
 }
 
 func (s *handRequest) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 	upath := r.URL.Path
-	api:=httpApi[upath]
-	if api!=nil {
+	hApi:=httpApi[upath]
+	if hApi!=nil {
 		stringSlice := strings.Split(upath,"/")
 		if stringSlice!=nil && strings.Compare(stringSlice[1],"ws")==0{
-			api(w,r,stringSlice[2])
+			hApi(w,r,stringSlice[2])
 		}else {
 
-			api(w,r,"")
+			hApi(w,r,"")
 		}
 
 	}else {
@@ -53,8 +62,9 @@ func (s *handRequest) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 }
 
 func index(w http.ResponseWriter, r *http.Request,e string)  {
-	t,_:=template.ParseFiles("views/index.html")
-	t.Execute(w,"")
+	indexPage, _ :=Asset("views/index.html")
+	t,_:=template.New("index").Parse(string(indexPage))
+	_ = t.Execute(w, "")
 }
 
 

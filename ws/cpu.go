@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/shirou/gopsutil/v3/cpu"
 	"log"
+	"time"
 )
 
 func CpuInfo(c *websocket.Conn,err error)  {
@@ -21,18 +22,17 @@ func CpuInfo(c *websocket.Conn,err error)  {
 }
 
 func CpuPercentSingle(c *websocket.Conn,err error)  {
-	for{
-		sleep()
-		info,_:=cpu.Percent(0,false)
-		j,_:=json.Marshal(info)
-		_ = c.WriteMessage(1, j)
-	}
+	cpuPercent(c,false)
 }
 
 func CpuPercentAll(c *websocket.Conn,err error)  {
+	cpuPercent(c,true)
+}
+
+func cpuPercent(c *websocket.Conn,percpu bool)  {
 	for{
 		sleep()
-		info,_:=cpu.Percent(0,true)
+		info,_:=cpu.Percent(time.Second,percpu)
 		j,_:=json.Marshal(info)
 		_ = c.WriteMessage(1, j)
 	}

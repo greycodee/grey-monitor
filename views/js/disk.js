@@ -60,8 +60,8 @@ http.onreadystatechange=(e)=>{
         },
         series:[{
             data:[
-                {value: json.inodesUsed, name: '已使用'},
-                {value: json.inodesFree, name: '未使用'},
+                {value: json.used, name: '已使用'},
+                {value: json.free, name: '未使用'},
             ]
         }]
     });
