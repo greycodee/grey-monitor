@@ -19,6 +19,7 @@ jobs:
 
     - name: Build
       run: |
+        export PATH=$PATH:$HOME/go/bin/
         go get github.com/jteeuwen/go-bindata/...
         go get github.com/elazarl/go-bindata-assetfs/...
         chmod +x ./build.sh

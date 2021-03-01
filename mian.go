@@ -31,6 +31,7 @@ func serverStart(addr string)  {
 	staticHandle := http.FileServer(assetFS())
 	//将/js/路径下的请求匹配到 ./views/js/下
 	http.Handle("/js/", staticHandle)
+	http.Handle("/archive/", staticHandle)
 
 	fmt.Println("http服务器端口："+addr)
 	// 开启http服务

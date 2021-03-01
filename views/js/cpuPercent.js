@@ -44,7 +44,7 @@ cpuPercentOption = {
 
         detail: {
             valueAnimation: true,
-            fontSize: 80,
+            fontSize: 40,
             offsetCenter: [0, '70%'],
             formatter: '{value}%'
 
