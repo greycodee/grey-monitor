@@ -1,4 +1,4 @@
-module grey-monitor
+module github.com/greycodee/grey-monitor
 
 go 1.14
 
