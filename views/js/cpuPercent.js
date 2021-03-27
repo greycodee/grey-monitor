@@ -56,7 +56,7 @@ cpuPercentChart.setOption(cpuPercentOption);
 
 // const host = window.location.host
 // const host = "127.0.0.1:8988"
-const cpuWS = new WebSocket("ws://"+host+"/ws/cpuPercentSingle")
+const cpuWS = new WebSocket("ws://"+host+"/service/ws/cpuPercentSingle")
 cpuWS.onmessage = function (evt) {
     const received_msg = evt.data;
 

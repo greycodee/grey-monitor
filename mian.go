@@ -1,14 +1,13 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"fmt"
-	assetfs "github.com/elazarl/go-bindata-assetfs"
 	"github.com/greycodee/grey-monitor/api"
 	"github.com/greycodee/grey-monitor/ws"
-	"html/template"
+	"io/fs"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -16,6 +15,9 @@ type handRequest struct {
 
 }
 var port = flag.String("p", "8989", "http端口")
+//go:embed views
+var htmlFile embed.FS
+
 func main() {
 	//获取命令行参数
 	flag.Parse()
@@ -25,13 +27,16 @@ func main() {
 }
 
 func serverStart(addr string)  {
-	// 接口路由处理
-	http.Handle("/",distribute())
 
-	staticHandle := http.FileServer(assetFS())
+
+	fsys, _ := fs.Sub(htmlFile, "views")
+	staticHandle := http.FileServer(http.FS(fsys))
 	//将/js/路径下的请求匹配到 ./views/js/下
+	// 接口路由处理
+	http.Handle("/",staticHandle)
 	http.Handle("/js/", staticHandle)
 	http.Handle("/archive/", staticHandle)
+	http.Handle("/service/",distribute())
 
 	fmt.Println("http服务器端口："+addr)
 	// 开启http服务
@@ -41,18 +46,6 @@ func serverStart(addr string)  {
 	}
 }
 
-/*
-	go-bindata-assetfs静态文件路由
-*/
-func assetFS() *assetfs.AssetFS {
-	assetInfo := func(path string) (os.FileInfo, error) {
-		return os.Stat(path)
-	}
-	for k := range _bintree.Children {
-		return &assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir, AssetInfo: assetInfo, Prefix: k}
-	}
-	panic("unreachable")
-}
 
 func distribute()  http.Handler{
 	return &handRequest{}
@@ -66,10 +59,9 @@ func (s *handRequest) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 	hApi:=httpApi[upath]
 	if hApi!=nil {
 		stringSlice := strings.Split(upath,"/")
-		if stringSlice!=nil && strings.Compare(stringSlice[1],"ws")==0{
-			hApi(w,r,stringSlice[2])
-		}else {
-
+		if stringSlice!=nil && strings.Compare(stringSlice[2],"ws")==0{
+			hApi(w,r,stringSlice[3])
+		}else if stringSlice!=nil && strings.Compare(stringSlice[2],"api")==0 {
 			hApi(w,r,"")
 		}
 
@@ -78,25 +70,17 @@ func (s *handRequest) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 	}
 	fmt.Println(upath)
 }
-/*
-	主页
-*/
-func index(w http.ResponseWriter, r *http.Request,e string)  {
-	indexPage, _ :=Asset("views/index.html")
-	t,_:=template.New("index").Parse(string(indexPage))
-	_ = t.Execute(w, "")
-}
+
 
 
 var httpApi = map[string]func(w http.ResponseWriter, r *http.Request,e string){
-	"/"				:		index,
-	"/ws/mem"		:		ws.Client,
-	"/ws/memPercent"		:		ws.Client,
-	"/ws/cpuPercentSingle"	:		ws.Client,
-	"/ws/cpuPercentAll"		:		ws.Client,
-	"/api/cpuInfo"	:		api.CpuInfo,
-	"/api/disk"		:		api.DiskInfo,
-	"/api/diskPart"	:		api.DiskPart,
-	"/api/diskPath" :		api.DiskInfoOfPath,
+	"/service/ws/mem"				:		ws.Client,
+	"/service/ws/memPercent"		:		ws.Client,
+	"/service/ws/cpuPercentSingle"	:		ws.Client,
+	"/service/ws/cpuPercentAll"		:		ws.Client,
+	"/service/api/cpuInfo"			:		api.CpuInfo,
+	"/service/api/disk"				:		api.DiskInfo,
+	"/service/api/diskPart"			:		api.DiskPart,
+	"/service/api/diskPath" 		:		api.DiskInfoOfPath,
 
 }

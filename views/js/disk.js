@@ -45,7 +45,7 @@ diskChart.setOption(diskOption);
 //     console.log(json)
 // }
 
-const diskUseUrl = "http://"+host+"/api/diskPath";
+const diskUseUrl = "http://"+host+"/service/api/diskPath";
 http.open("POST", diskUseUrl);
 http.setRequestHeader('Content-Type', 'application/json');
 var diskPath = {path:'/home'}

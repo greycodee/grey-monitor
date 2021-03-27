@@ -54,7 +54,7 @@ memPercentOption = {
 memPercentChart.showLoading();
 memPercentChart.setOption(memPercentOption);
 
-const memWS = new WebSocket("ws://"+host+"/ws/memPercent")
+const memWS = new WebSocket("ws://"+host+"/service/ws/memPercent")
 memWS.onmessage = function (evt) {
     const received_msg = evt.data;
     memPercentChart.hideLoading();
